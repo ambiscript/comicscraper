@@ -4,7 +4,7 @@ Webcomic scraper
 
 ## Installation
 
-`git clone https://github.com/ambiscript/xkcd-comicscraper`
+`npm install comicscraper --save`
 
 ## Usage
 
