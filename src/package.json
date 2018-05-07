@@ -1,0 +1,24 @@
+{
+  "name": "comicscraper",
+  "version": "2.0.0",
+  "description": "webcomic scraper",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ambiscript/codescraper"
+  },
+  "keywords": [
+    "webscraper", "webcomic", "comic"
+  ],
+  "author": {
+    "name": "Ambiscript",
+    "email": "ambiguousscripting@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "jsdom": "^11.10.0",
+    "mongoose": "^5.0.17",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2"
+  }
+}
