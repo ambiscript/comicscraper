@@ -16,7 +16,7 @@ To include in your Node project
 const comicHandler = require('./comicscraper/comicHandler';
 ```
 
-### initialize(comicURL)
+### initialize(configObject)
 
 Before using comicscraper, it would be wise to create a config file and import it using the initalize function
 
