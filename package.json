@@ -5,7 +5,7 @@
   "main": "comicHandler.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ambiscript/codescraper"
+    "url": "https://github.com/ambiscript/comicscraper"
   },
   "keywords": [
     "webscraper", "webcomic", "comic"
