@@ -16,7 +16,8 @@ function getData(source, page) {
         return {
             title: page.getElementById('datestring').textContent,
             url: `https:${page.getElementById('comicbody').children[1].getAttribute('src')}`,
-            subtitle: page.getElementById('datestring').textContent
+            subtitle: page.getElementById('comicbody').children[2].children[0].children[2].
+                      children[0].children[0].textContent
         };
     }
 }
