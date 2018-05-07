@@ -1,7 +1,8 @@
 {
   "name": "codeburst-webscraper",
-  "version": "1.0.0",
-  "description": "Webscraper tutorial from https://codeburst.io/an-introduction-to-web-scraping-with-node-js-1045b55c63f7",
+  "version": "1.1.0",
+  "description": "xkcd webscraper, based on tutorial from https://codeburst.io/an-introduction-to-web-scraping-with-node-js-1045b55c63f7",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -21,6 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
+    "mongoose": "^5.0.17",
     "request": "^2.85.0",
     "request-promise": "^4.2.2"
   }
