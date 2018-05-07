@@ -99,7 +99,7 @@ function updateComics(input) {
 
         checkComic(input).then(upToDate => {
             if (upToDate) {
-                resolve('No updates; comic up to date');
+                reject('No updates; comic up to date');
             } else {
                 comic = input;
 
