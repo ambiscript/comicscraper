@@ -1,6 +1,6 @@
 {
   "name": "comicscraper",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "webcomic scraper",
   "main": "comicHandler.js",
   "repository": {
@@ -8,7 +8,9 @@
     "url": "https://github.com/ambiscript/comicscraper"
   },
   "keywords": [
-    "webscraper", "webcomic", "comic"
+    "webscraper",
+    "webcomic",
+    "comic"
   ],
   "author": {
     "name": "Ambiscript",
