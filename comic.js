@@ -1,14 +1,11 @@
 const requestPromise = require('request-promise'),
-      cheerio = require('cheerio'),
+      jsdom = require('jsdom').JSDOM,
       mongoose = require('mongoose');
 
 const config = require('./config.json');
 
 const options = {
-    uri: 'https://xkcd.com/',
-    transform: (body) => {
-        return cheerio.load(body);
-    }
+    uri: 'https://xkcd.com/'
 };
 
 const comicSchema = mongoose.Schema({
@@ -30,56 +27,57 @@ const Comic = mongoose.model('Comic', comicSchema);
 
 module.exports = function() {
     return new Promise((resolve, reject) => {
-        requestPromise(options).then(($) => {
+        requestPromise(options).then((page) => {
+            page = new jsdom(page);
+
             const current = {
-                title: $('#ctitle').text(),
-                url: `https:${$('#comic').children('img').attr('src')}`,
-                subtitle: $('#comic').children('img').attr('title')
+                title: page.window.document.getElementById('ctitle').textContent,
+                url: `https:${page.window.document.getElementById('comic').children[0].getAttribute('src')}`,
+                subtitle: page.window.document.getElementById('comic').children[0].getAttribute('title')
             };
         
             Comic.findOne({}, function(err, comic) {
                 let state;
         
                 if (err) {
-                    reject(`Encounted error: ${err}`);
+                    reject(`ERROR: ${err}`);
                 }
-        
-                if (comic) {
-                    if (comic.title !== current.title) {
+
+                if (comic && comic.title === current.title) {
+                    state = 'not updated';
+
+                    reject('ERROR: No updates');
+                } else {
+                    if (comic) {
                         comic.title = current.title;
                         comic.url = current.url;
                         comic.subtitle = current.subtitle;
         
                         state = 'updated';
                     } else {
-                        state = 'not updated';
+                        const comic = new Comic(current);
+        
+                        state = 'initiated';
+                    }
 
-                        reject('Comic up to date');
-                    }
-                    
-                } else {
-                    const comic = new Comic(current);
-        
-                    state = 'initiated';
+                    comic.save().then(
+                        () => {
+                            mongoose.disconnect();
+            
+                            resolve(comic);
+                        },
+                        err => {
+                            reject(`ERROR: ${err}`);
+            
+                            mongoose.disconnect();
+                        }
+                    );
+
+                    console.log(`Comic ${state}`); 
                 }
-        
-                comic.save().then(
-                    () => {
-                        console.log(`Comic ${state}`);
-        
-                        mongoose.disconnect();
-        
-                        resolve(comic);
-                    },
-                    err => {
-                        reject(`Encounted error: ${err}`);
-        
-                        mongoose.disconnect();
-                    }
-                );
             });
         }).catch((err) => {
-            reject(`Encounted error: ${err}`);
+            reject(`ERROR: ${err}`);
         });
     });
 };
