@@ -16,6 +16,24 @@ To include in your Node project
 const comicHandler = require('./comicscraper/comicHandler';
 ```
 
+### initialize(comicURL)
+
+Before using comicscraper, it would be wise to create a config file and import it using the initalize function
+
+```json
+{
+    "mongoAuth": "<MongoDB authorization token>"
+}
+```
+
+```js
+const config = require('./config.json');
+
+comicHandler.initialize({
+    mongoAuth: config.mongoAuth;
+});
+```
+
 ### parse(comicURL)
 
 Parse a supported webcomic link (see note on current suport) and return a comic object (mongoose Schema)

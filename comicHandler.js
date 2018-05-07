@@ -3,8 +3,12 @@
  * @module comicscraper
  */
 module.exports = {
+    initialize: initialize,
+    init: initialize,
     parse: parseComic,
+    read: parseComic,
     get: getComic,
+    fetch: getComic,
     update: updateComics
 };
 
@@ -12,8 +16,7 @@ const requestPromise = require('request-promise'),
       jsdom = require('jsdom').JSDOM,
       mongoose = require('mongoose');
 
-const config = require('./config.json'),
-      comics = require('./comics.js');
+const comics = require('./comics.js');
 
 const Comic = mongoose.model('Comic', mongoose.Schema({
     source: String,
@@ -21,6 +24,16 @@ const Comic = mongoose.model('Comic', mongoose.Schema({
     url: String,
     subtitle: String
 }));
+
+const config = {};
+
+/**
+ * Configuration for ComicHandler
+ * @param {object} input input configuration
+ */
+function initialize(input) {
+    config.mongoAuth = input.mongoAuth;
+}
 
 /** 
  * Get comic from URL
