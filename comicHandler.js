@@ -51,7 +51,7 @@ function parseComic(input) {
             /* Initiates new comic object from page parameters */
             const comic = new Comic({
                 source: inputSource,
-                title: comics(inputSource, page).title,
+                title: page.querySelector('title').textContent,
                 url: comics(inputSource, page).url,
                 subtitle: comics(inputSource, page).subtitle
             });

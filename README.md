@@ -2,7 +2,9 @@
 
 Webcomic scraper
 
-![npm](https://img.shields.io/npm/dw/localeval.svg)
+![npm](https://img.shields.io/npm/v/comicscraper.svg)
+
+![npm](https://img.shields.io/npm/dw/comicscraper.svg)
 
 ## Installation
 
@@ -75,7 +77,9 @@ comicHandler.update(comicObj).then(status => {
 ## Currently supports
 
 [xkcd](https://xkcd.com/)\
-[Girl Genius](http://www.girlgeniusonline.com/)
+[Girl Genius](http://www.girlgeniusonline.com/)\
+[Saturday Morning Breakfast Cereal](https://www.smbc-comics.com/comic/)\
+[Abstruse Goose](http://abstrusegoose.com/)
 
 ### Note
 
