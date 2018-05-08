@@ -2,6 +2,8 @@
 
 Webcomic scraper
 
+![npm](https://img.shields.io/npm/dw/localeval.svg)
+
 ## Installation
 
 `npm install comicscraper --save`
