@@ -20,22 +20,22 @@ To include in your Node project
 const comicHandler = require('./comicscraper/comicHandler';
 ```
 
-### initialize(configObject)
+### connect(authToken)
 
-Before using comicscraper, it would be wise to create a config file and import it using the initalize function
-
-```json
-{
-    "mongoAuth": "<MongoDB authorization token>"
-}
-```
+Connect to MongoDB database
 
 ```js
-const config = require('./config.json');
+comicHandler.connect(config.mongoAuth);
 
-comicHandler.initialize({
-    mongoAuth: config.mongoAuth;
-});
+// Further processing
+```
+
+### disconnect()
+
+Disconnect from MongoDB database
+
+```js
+comicHandler.disconnect();
 ```
 
 ### parse(comicURL)

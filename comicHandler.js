@@ -3,7 +3,6 @@
  * @module comicscraper
  */
 module.exports = {
-    initialize: initialize,
     parse: parseComic,
     connect: connectToDatabase,
     disconnect: disconnectFromDatabase,
@@ -25,14 +24,6 @@ const Comic = mongoose.model('Comic', mongoose.Schema({
 }));
 
 const config = {};
-
-/**
- * Configuration for ComicHandler
- * @param {object} input input configuration
- */
-function initialize(input) {
-    config.mongoAuth = input.mongoAuth;
-}
 
 /**
  * Connects to MongoDB database
