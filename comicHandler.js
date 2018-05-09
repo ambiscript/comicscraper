@@ -30,7 +30,7 @@ const config = {};
  * @param {String} auth MongoDB auth token
  */
 function connectToDatabase(auth) {
-    mongoose.connect(config.mongoAuth).then(
+    mongoose.connect(auth).then(
         () => {
             console.log('Connected to MongoDB');
         },
