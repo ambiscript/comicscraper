@@ -13,7 +13,7 @@ function getData(source, page) {
     // http://www.girlgeniusonline.com/comic
     if (source === 'girlgeniusonline') {
         return {
-            url: `${page.getElementById('comicbody').querySelector('img').getAttribute('src')}`,
+            url: `${page.getElementById('comicbody').querySelectorAll('img')[1].getAttribute('src')}`,
             subtitle: page.querySelector('title').textContent
         };
     }

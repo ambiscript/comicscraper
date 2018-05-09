@@ -27,10 +27,12 @@ const config = {};
 
 /**
  * Connects to MongoDB database
+ * @exports connect
  * @param {String} auth MongoDB auth token
+ * @param {Object} options (Optional) mongoose options object
  */
-function connectToDatabase(auth) {
-    mongoose.connect(auth).then(
+function connectToDatabase(auth, options) {
+    mongoose.connect(auth, options).then(
         () => {
             console.log('Connected to MongoDB');
         },
@@ -60,6 +62,8 @@ function parseComic(input) {
                 url: comics(inputSource, page).url,
                 subtitle: comics(inputSource, page).subtitle
             });
+
+            console.log(comic);
     
             resolve(comic);
         }).catch(err => {
@@ -120,6 +124,7 @@ function updateComics(input) {
 
 /**
  * Disconnects from MongoDB database
+ * @exports disconnect
  */
 function disconnectFromDatabase() {
     mongoose.disconnect();

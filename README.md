@@ -3,7 +3,6 @@
 Webcomic scraper
 
 ![npm](https://img.shields.io/npm/v/comicscraper.svg)
-
 ![npm](https://img.shields.io/npm/dw/comicscraper.svg)
 
 ## Installation
