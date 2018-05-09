@@ -4,11 +4,10 @@
  */
 module.exports = {
     initialize: initialize,
-    init: initialize,
     parse: parseComic,
-    read: parseComic,
+    connect: connectToDatabase,
+    disconnect: disconnectFromDatabase,
     get: getComic,
-    fetch: getComic,
     update: updateComics
 };
 
@@ -35,6 +34,21 @@ function initialize(input) {
     config.mongoAuth = input.mongoAuth;
 }
 
+/**
+ * Connects to MongoDB database
+ * @param {String} auth MongoDB auth token
+ */
+function connectToDatabase(auth) {
+    mongoose.connect(config.mongoAuth).then(
+        () => {
+            console.log('Connected to MongoDB');
+        },
+        err => {
+            console.log(`Connection failed; ${err}`);
+        }
+    );
+}
+
 /** 
  * Get comic from URL
  * @exports parse
@@ -48,7 +62,7 @@ function parseComic(input) {
 
             let inputSource = input.match(/^(http[s]?:\/\/)?(www\.)?([\w-]*)/)[3];
     
-            /* Initiates new comic object from page parameters */
+            /* Initializes new comic object from page parameters */
             const comic = new Comic({
                 source: inputSource,
                 title: page.querySelector('title').textContent,
@@ -104,17 +118,20 @@ function updateComics(input) {
                 comic = input;
 
                 comic.save().then(() => {
-                    mongoose.disconnect();
-    
                     resolve('Comic updated');
                 }).catch(err => {
-                    mongoose.disconnect();
-    
                     reject(`No updates; ${err}`);
                 });
             }
         });
     });
+}
+
+/**
+ * Disconnects from MongoDB database
+ */
+function disconnectFromDatabase() {
+    mongoose.disconnect();
 }
 
 /* UTILITY */
@@ -129,25 +146,12 @@ function checkComic(input) {
             reject('Illegal input: input must contain comic object');
         }
 
-        mongoose.connect(config.mongoAuth).then(
-            () => {
-                console.log('Connected to MongoDB');
-            },
-            err => {
-                reject(`Could not connect to database; ${err}`);
-            }
-        );
-
         Comic.findOne({source: input.source}, (err, comic) => {
             if (err) {
-                mongoose.disconnect();
-
                 reject(`Couldn't check for updates; ${err}`);
             }
 
             if (comic && comic.title === input.title) {
-                mongoose.disconnect();
-
                 resolve(true);
             } else {
                 resolve(false);
