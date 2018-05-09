@@ -14,7 +14,7 @@ function getData(source, page) {
     if (source === 'girlgeniusonline') {
         return {
             url: `${page.getElementById('comicbody').querySelector('img').getAttribute('src')}`,
-            subtitle: page.querySelector('title')
+            subtitle: page.querySelector('title').textContent
         };
     }
 
