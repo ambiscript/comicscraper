@@ -4,6 +4,7 @@ Webcomic scraper
 
 ![npm](https://img.shields.io/npm/v/comicscraper.svg)
 ![npm](https://img.shields.io/npm/dw/comicscraper.svg)
+[![Build Status](https://travis-ci.org/ambiscript/comicscraper.svg?branch=master)](https://travis-ci.org/ambiscript/comicscraper)
 
 ## Installation
 

@@ -21,7 +21,7 @@ function getData(source, page) {
     // https://www.smbc-comics.com/comic/
     if (source === 'smbc-comics') {
         return {
-            url: page.getElementById('cc-comic').getAttribute('src'),
+            url: `https://www.smbc-comics.com${page.getElementById('cc-comic').getAttribute('src')}`,
             subtitle: page.getElementById('cc-comic').getAttribute('title')
         };
     }

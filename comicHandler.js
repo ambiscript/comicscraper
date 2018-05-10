@@ -3,11 +3,11 @@
  * @module comicscraper
  */
 module.exports = {
-    parse: parseComic,
-    connect: connectToDatabase,
-    disconnect: disconnectFromDatabase,
-    get: getComic,
-    update: updateComics
+    parse: parse,
+    connect: connect,
+    disconnect: disconnect,
+    get: get,
+    update: update
 };
 
 const requestPromise = require('request-promise'),
@@ -23,23 +23,42 @@ const Comic = mongoose.model('Comic', mongoose.Schema({
     subtitle: String
 }));
 
-const config = {};
+class UpdateError extends Error {
+    constructor(...params) {
+        super(...params);
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, UpdateError);
+        }
+    }
+}
+
+class RetrievalError extends Error {
+    constructor(...params) {
+        super(...params);
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, RetrievalError);
+        }
+    }
+}
 
 /**
  * Connects to MongoDB database
  * @exports connect
  * @param {String} auth MongoDB auth token
  * @param {Object} options (Optional) mongoose options object
+ * @returns true if connected
  */
-function connectToDatabase(auth, options) {
-    mongoose.connect(auth, options).then(
-        () => {
+function connect(auth, options) {
+    return new Promise((resolve, reject) => {
+        mongoose.connect(auth, options).then(() => {
             console.log('Connected to MongoDB');
-        },
-        err => {
-            console.log(`Connection failed; ${err}`);
-        }
-    );
+            resolve(true);
+        }).catch(err => {
+            reject(err);
+        });
+    });
 }
 
 /** 
@@ -48,7 +67,7 @@ function connectToDatabase(auth, options) {
  * @param input Input URL
  * @returns Promise that resolves to comic object
  */
-function parseComic(input) {
+function parse(input) {
     return new Promise((resolve, reject) => {
         requestPromise({uri: input}).then(page => {
             page = new jsdom(page).window.document;
@@ -62,12 +81,8 @@ function parseComic(input) {
                 url: comics(inputSource, page).url,
                 subtitle: comics(inputSource, page).subtitle
             });
-
-            console.log(comic);
     
             resolve(comic);
-        }).catch(err => {
-            reject(`Could not retrieve comic; ${err}`);
         });
     });
 }
@@ -78,17 +93,13 @@ function parseComic(input) {
  * @param {Comic} input URL for input comic
  * @returns Promise that resolves to comic in database
  */
-function getComic(input) {
+function get(input) {
     return new Promise((resolve, reject) => {
         Comic.findOne({source: input.match(/^(http[s]?:\/\/)?(www\.)?([\w-]*)/)[3]}, (err, comic) => {
-            if (err) {
-                reject(`Could not retrieve comic; ${err}`);
-            }
-
             if (comic) {
                 resolve(comic);
             } else {
-                reject('Could not retrieve comic; not found in database');
+                reject(new RetrievalError('Comic not found in database'));
             }
         });
     });
@@ -100,22 +111,20 @@ function getComic(input) {
  * @param {Comic} input Input comic
  * @returns Promise representing status of update
  */
-function updateComics(input) {
+function update(input) {
     return new Promise((resolve, reject) => {
-        if (!(input && input._id)) {
-            reject('Illegal input: input must contain comic object');
+        if (!(input && input.constructor.name.toLowerCase() === 'model')) {
+            reject(new TypeError("Input must be comic object"));
         }
 
         checkComic(input).then(upToDate => {
             if (upToDate) {
-                reject('No updates; comic up to date');
+                reject(new UpdateError('Comic up to date'));
             } else {
                 comic = input;
 
                 comic.save().then(() => {
                     resolve('Comic updated');
-                }).catch(err => {
-                    reject(`No updates; ${err}`);
                 });
             }
         });
@@ -126,27 +135,25 @@ function updateComics(input) {
  * Disconnects from MongoDB database
  * @exports disconnect
  */
-function disconnectFromDatabase() {
+function disconnect() {
+    console.log('Mongoose disconnected');
     mongoose.disconnect();
 }
 
 /* UTILITY */
 
-/*
+/**
  * Checks database for current version of comic
- * Returns a promise that resolves to true if the comic is up to date and false otherwise
+ * @param {Comic} input Input comic
+ * @returns Promise that resolves to true if the comic is up to date and false otherwise
  */
-function checkComic(input) {
+function check(input) {
     return new Promise((resolve, reject) => {
-        if (!(input && input._id)) {
-            reject('Illegal input: input must contain comic object');
+        if (!(input && input.constructor.name.toLowerCase() === 'model')) {
+            reject(new TypeError("Input must be comic object"));
         }
 
         Comic.findOne({source: input.source}, (err, comic) => {
-            if (err) {
-                reject(`Couldn't check for updates; ${err}`);
-            }
-
             if (comic && comic.title === input.title) {
                 resolve(true);
             } else {
